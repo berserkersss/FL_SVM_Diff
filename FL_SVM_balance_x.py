@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # # Fed-Learning in Wireless Environment
-# 此函数用户学长w的要求生成，w初始化为0,使用学姐生成标签的方式, 10个类，使用CL和FedAvg
+# 此函数用户学长w的要求生成，w初始化为0,使用学姐生成标签的方式, 10个类，使用CL和FedAvg,不进行过拟合处理
 # ## Import Libraries
 
 # In[1]:
@@ -327,6 +327,7 @@ for t in range(T):
         # 更新CL的w
         W_CL = update_weight(W_CL, X_train_batch, y_train_batch, lam,
                              eta)
+
         # Upon each update slot, select the devices and udpate the weight
         if t % tau == 0:
 
@@ -368,13 +369,6 @@ for t in range(T):
             with open(filename, "a") as myfile:
                 myfile.write(str(accuracy) + ',')
 
-            if unbalance_accuracy < accuracy and unbalance_count < 10:
-                unbalance_count = 0
-            else:
-                unbalance_count += 1
-            unbalance_accuracy = accuracy
-            if unbalance_count >= 10:
-                unbalance_flag = 0
 
             # FL_balance
             y_predict = predict(Ws_global_Fvg_balance, X_test)
@@ -394,13 +388,6 @@ for t in range(T):
             with open(filename, "a") as myfile:
                 myfile.write(str(accuracy) + ',')
 
-            if balance_accuracy < accuracy and balance_count < 10:
-                balance_count = 0
-            else:
-                balance_count += 1
-            balance_accuracy = accuracy
-            if balance_count >= 10:
-                balance_flag = 0
 
             # Difference
             Diff = np.linalg.norm(W_CL - Ws_global_Fvg_balance)
@@ -439,8 +426,8 @@ ax.plot(acc_train_cl_his_iid, c=colors[4], label=labels[4])
 ax.legend()
 plt.xlabel('Iterations')
 plt.ylabel('Accuracy')
-plt.savefig('Figures/Accuracy_SVM.png')
-plt.savefig('Figures/Accuracy_SVM.eps')
+plt.savefig('Figures/Accuracy_SVM2.png')
+plt.savefig('Figures/Accuracy_SVM2.eps')
 
 colors = ["navy", "red", "black", "orange"]
 labels = ["FedAvg_unbalance", "FedAvg_Optimize_unbalance", "FedAvg_balance", "FedAvg_Optimize_balance"]
@@ -453,5 +440,5 @@ ax.plot(diff_train_cl_his2, c=colors[3], label=labels[3])
 ax.legend()
 plt.xlabel('Iterations')
 plt.ylabel('Difference')
-plt.savefig('Figures/Difference_SVM.png')
-plt.savefig('Figures/Difference_SVM.eps')
+plt.savefig('Figures/Difference_SVM2.png')
+plt.savefig('Figures/Difference_SVM2.eps')
